@@ -1,4 +1,4 @@
-import 'es6-promise'
+// import 'es6-promise'
 
 const React = require('react-native')
 const { Provider } = require('react-redux/native')

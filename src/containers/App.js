@@ -12,7 +12,8 @@ function mapStateToProps(state) {
     adminAreaLev2: state.location.adminAreaLev2,
     adminAreaLev1: state.location.adminAreaLev1,
     country:       state.location.country,
-    postcode:      state.location.postcode
+    postcode:      state.location.postcode,
+    queryAddress:  state.location.queryAddress
   }
 }
 

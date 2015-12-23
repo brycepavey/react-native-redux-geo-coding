@@ -18,29 +18,32 @@ const GeoLocationData = React.createClass({
 
 
   componentDidMount() {
-    let { location } = this.props
-    this.props.updateLocation(location)
+    // console.log(this.props)
+    let { queryAddress } = this.props
+    this.props.updateLocation(queryAddress)
   },
 
   renderRow: function(rowData) {
+    // console.log('---ROW DATA---')
+    // console.log(rowData)
     return (
-      <View>
-        <Text>
-          {this.props.name}
-        </Text>
-      </View>
+      <Location address={rowData.formatted_address}
+                />
     )
   },
 
   render: function() {
     // console.log(this.props.location)
-    // console.log('---LOCATION---')
-    // console.log(this.props)
+    let streetNo = this.props.streetNo
+
+    console.log('---LOCATION---')
+    console.log(this.props.location)
     return (
       <View style={styles.container}>
-        <View>
-          <Location />
-        </View>
+        <ListView
+          dataSource={this.state.dataSource.cloneWithRows(this.props.location)}
+          renderRow={this.renderRow}
+        />
       </View>
     )
   }
@@ -97,6 +100,6 @@ const styles = StyleSheet.create({
 });
 
 // <ListView
-//   dataSource={this.state.dataSource.cloneWithRows(location)}
+//   dataSource={this.state.dataSource.cloneWithRows(this.props.location)}
 //   renderRow={this.renderRow}
 // />

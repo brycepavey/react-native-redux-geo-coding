@@ -3,7 +3,8 @@ const {
 } = require('../actions/locationActions')
 
 const initialState = {
-  location: '1600+Amphitheatre+Parkway,+Mountain+View,+CA'
+  queryAddress: "1600+Amphitheatre+Parkway,+Mountain+View,+CA",
+  location: []
 }
 
 function location(state = initialState, action) {

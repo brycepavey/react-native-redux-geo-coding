@@ -10,10 +10,11 @@ exports.RECEIVE_LOCATION = 'RECEIVE_LOCATION'
 exports.REQUEST_LOCATION = 'REQUEST_LOCATION'
 
 exports.updateLocation = function updateLocation(address) {
+  var query = `https://maps.googleapis.com/maps/api/geocode/json?&encoding=json&address=${address}`
+  console.log(query)
+
   return dispatch => {
-    console.log('hello')
-    // dispatch(actions.requestLocation(address))
-    return fetch('https://maps.googleapis.com/maps/api/geocode/json?&encoding=json&address=1600+Amphitheatre+Parkway,+Mountain+View,+CA')
+    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?&encoding=json&address=${address}`)
       .then((response) => response.json())
       .then(json => dispatch(receiveLocation(address, json)))
   }
@@ -29,6 +30,12 @@ exports.requestLocation = function requestLocation(address) {
 function receiveLocation(address, json) {
   // var jsonData = JSON.parse(json.results);
 
+  // console.log(json)
+  // return {
+  //   type: actions.RECEIVE_LOCATION,
+  //   location: json,
+  // }
+
   var streetNo = []
   var route = []
   var locality = []
@@ -38,6 +45,7 @@ function receiveLocation(address, json) {
   var postcode = []
 
   if(json.results.length == 1) {
+    // streetNo = json.results[0].address_components[0].long_name
     streetNo.push(json.results[0].address_components[0].long_name)
     streetNo.push(json.results[0].address_components[0].short_name)
 
