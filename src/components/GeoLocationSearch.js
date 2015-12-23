@@ -63,6 +63,7 @@ var GeoLocationData = require('./GeoLocationData');
 
 function urlForQueryAndPage(key, value, address) {
   var data = {
+    encoding: 'json',
     address: address
   };
   data[key] = value;
@@ -70,25 +71,23 @@ function urlForQueryAndPage(key, value, address) {
   var querystring = Object.keys(data)
     .map(key => key + '=' + encodeURIComponent(data[key]))
     .join('&');
-
-  return 'http://api.nestoria.co.uk/api?' + querystring;
+  return 'https://maps.googleapis.com/maps/api/geocode/json?' + querystring;
 }
 
-class SearchPage extends Component {
+class GeoLocationSearch extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      searchString: 'london',
+      searchString: '158 City Road Melbourne 3088',
       isLoading: false,
       message: ''
     };
   }
 
   onSearchTextChanged(event) {
-    console.log('onSearchTextChanged');
-    this.setState({ searchString: event.nativeEvent.text });
-    console.log(this.state.searchString);
+    this.setState({ searchString: event.nativeEvent.text.trim().split(' ').join('+') });
+    console.log(this.state.searchString.trim().split(' ').join('+'));
   }
 
   _executeQuery(query) {
@@ -135,17 +134,14 @@ class SearchPage extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.description}>
-          Search for houses to buy!
-        </Text>
-        <Text style={styles.description}>
-          Search by place-name, postcode or search near your location.
+          Search Location
         </Text>
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
             value={this.props.searchString}
             onChange={this.onSearchTextChanged.bind(this)}
-            placeholder='Search via name or postocde'
+            placeholder='Search via address'
           />
           <TouchableHighlight style={styles.button}
             underlayColor='#99d9f4'>
@@ -156,12 +152,6 @@ class SearchPage extends Component {
             </Text>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight style={styles.button}
-          underlayColor='#99d9f4'>
-          <Text style={styles.buttonText}>
-            Location
-          </Text>
-        </TouchableHighlight>
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
       </View>
@@ -169,4 +159,4 @@ class SearchPage extends Component {
   }
 }
 
-module.exports = SearchPage;
+module.exports = GeoLocationSearch;

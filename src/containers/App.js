@@ -1,6 +1,6 @@
 const { bindActionCreators }  = require ('redux')
 const { connect } = require ('react-redux/native')
-const GeoLocationData = require('../components/GeoLocationData')
+const GeoLocationSearch = require('../components/GeoLocationSearch')
 const LocationActions = require('../actions/locationActions')
 
 function mapStateToProps(state) {
@@ -21,4 +21,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(LocationActions, dispatch)
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(GeoLocationData)
+module.exports = connect(mapStateToProps, mapDispatchToProps)(GeoLocationSearch)
