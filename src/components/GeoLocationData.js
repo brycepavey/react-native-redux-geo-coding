@@ -18,14 +18,11 @@ const GeoLocationData = React.createClass({
 
 
   componentDidMount() {
-    // console.log(this.props)
     let { queryAddress } = this.props
     this.props.updateLocation(queryAddress)
   },
 
   renderRow: function(rowData) {
-    // console.log('---ROW DATA---')
-    // console.log(rowData)
     return (
       <Location address={rowData.formatted_address}
                 />

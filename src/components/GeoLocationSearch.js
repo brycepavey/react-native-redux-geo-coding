@@ -1,7 +1,9 @@
 'use strict'
+const Location = require('./Location')
+const React = require('react-native');
 
-var React = require('react-native');
-var {
+const {
+  ListView,
   StyleSheet,
   Text,
   TextInput,
@@ -11,6 +13,76 @@ var {
   Image,
   Component
 } = React;
+
+const GeoLocationSearch = React.createClass ({
+  getInitialState: function() {
+    return {
+      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      searchString: '158 City Road Melbourne',
+    }
+  },
+
+  renderRow: function(rowData) {
+    return (
+      <Location
+        address={rowData.formatted_address}
+      />
+    )
+  },
+
+  onSearchTextChanged: function(event) {
+    this.setState({ searchString: event.nativeEvent.text.trim().split(' ').join('+') });
+    console.log(this.state.searchString.trim().split(' ').join('+'));
+  },
+
+  _executeQuery: function(query) {
+    // this.setState({ isLoading: true });
+    this.props.updateLocation(this.state.searchString)
+  },
+
+  render: function() {
+    var spinner = this.props.isLoading ?
+      ( <ActivityIndicatorIOS
+          hidden='true'
+          size='large'/> ) :
+      ( <View/> );
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.description}>
+          Search Location
+        </Text>
+        <View style={styles.flowRight}>
+          <TextInput
+            style={styles.searchInput}
+            value={this.state.searchString}
+            onChange={this.onSearchTextChanged}
+            placeholder='Search via address'
+          />
+          <TouchableHighlight style={styles.button}
+            underlayColor='#99d9f4'>
+            <Text
+              style={styles.buttonText}
+              onPress={this._executeQuery}>
+              Go
+            </Text>
+          </TouchableHighlight>
+        </View>
+        <View>
+          <ListView
+            dataSource={this.state.dataSource.cloneWithRows(this.props.location)}
+            renderRow={this.renderRow}
+          />
+        </View>
+        {spinner}
+        <Text style={styles.description}>{this.state.message}</Text>
+
+      </View>
+    )
+  }
+})
+module.exports = GeoLocationSearch;
+
 
 var styles = StyleSheet.create({
   description: {
@@ -58,105 +130,3 @@ var styles = StyleSheet.create({
     color: '#48BBEC'
   }
 });
-
-var GeoLocationData = require('./GeoLocationData');
-
-function urlForQueryAndPage(key, value, address) {
-  var data = {
-    encoding: 'json',
-    address: address
-  };
-  data[key] = value;
-
-  var querystring = Object.keys(data)
-    .map(key => key + '=' + encodeURIComponent(data[key]))
-    .join('&');
-  return 'https://maps.googleapis.com/maps/api/geocode/json?' + querystring;
-}
-
-class GeoLocationSearch extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchString: '158 City Road Melbourne 3088',
-      isLoading: false,
-      message: ''
-    };
-  }
-
-  onSearchTextChanged(event) {
-    this.setState({ searchString: event.nativeEvent.text.trim().split(' ').join('+') });
-    console.log(this.state.searchString.trim().split(' ').join('+'));
-  }
-
-  _executeQuery(query) {
-    console.log(query);
-    this.setState({ isLoading: true });
-
-    fetch(query)
-      .then(response => response.json())
-      .then(json => this._handleResponse(json.response))
-      .catch(error =>
-        this.setState({
-          isLoading: false,
-          message: 'Something bad happened' + error
-        }));
-  }
-
-  _handleResponse(response) {
-    this.setState({ isLoading: false, message: ''});
-    if(response.application_response_code.substr(0, 1) == '1') {
-      this.props.navigator.push({
-        title: 'Results',
-        component: GeoLocationData,
-        passProps: {listings: response.listings}
-      })
-    } else {
-      this.setState({ message: 'Location not recognized; please try again.'});
-    }
-  }
-
-  onSearchPressed() {
-    var query = urlForQueryAndPage('place_name', this.state.searchString, 1);
-    console.log(query)
-    this._executeQuery(query);
-  }
-
-  render() {
-
-    var spinner = this.state.isLoading ?
-      ( <ActivityIndicatorIOS
-          hidden='true'
-          size='large'/> ) :
-      ( <View/> );
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.description}>
-          Search Location
-        </Text>
-        <View style={styles.flowRight}>
-          <TextInput
-            style={styles.searchInput}
-            value={this.props.searchString}
-            onChange={this.onSearchTextChanged.bind(this)}
-            placeholder='Search via address'
-          />
-          <TouchableHighlight style={styles.button}
-            underlayColor='#99d9f4'>
-            <Text
-              style={styles.buttonText}
-              onPress={this.onSearchPressed.bind(this)}>
-              Go
-            </Text>
-          </TouchableHighlight>
-        </View>
-        {spinner}
-        <Text style={styles.description}>{this.state.message}</Text>
-      </View>
-    )
-  }
-}
-
-module.exports = GeoLocationSearch;

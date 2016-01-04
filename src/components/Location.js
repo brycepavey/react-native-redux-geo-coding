@@ -12,9 +12,6 @@ class Location extends Component {
   }
 
   render() {
-    // console.log('---inside Location----')
-    // console.log(this.props)
-    // console.log('---end inside location')
     return(
       <View style={styles.container}>
         <Text>
@@ -30,8 +27,6 @@ module.exports = Location
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    padding: 20,
-    marginTop: 65,
+    marginBottom: 5
   }
 });

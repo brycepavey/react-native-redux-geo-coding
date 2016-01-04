@@ -1,5 +1,3 @@
-// import 'es6-promise'
-
 const React = require('react-native')
 const { Provider } = require('react-redux/native')
 const App = require('./src/containers/App')
@@ -13,12 +11,6 @@ const {
 const store = configureStore()
 
 class GeoCoding extends Component {
-  componentDidMount() {
-    // console.log('---STORE DDP--')
-    // console.log(store.getState().anonUsers)
-  }
-
-
   render() {
     return (
       <Provider store={store}>

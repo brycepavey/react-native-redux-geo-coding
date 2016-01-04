@@ -7,13 +7,8 @@ function mapStateToProps(state) {
 
   return {
     location:      state.location.location,
-    streetNo:      state.location.streetNo,
-    locality:      state.location.locality,
-    adminAreaLev2: state.location.adminAreaLev2,
-    adminAreaLev1: state.location.adminAreaLev1,
-    country:       state.location.country,
-    postcode:      state.location.postcode,
-    queryAddress:  state.location.queryAddress
+    address:       state.location.address,
+    isLoading:     state.isLading
   }
 }
 
