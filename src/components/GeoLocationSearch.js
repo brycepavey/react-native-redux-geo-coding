@@ -14,33 +14,27 @@ const {
   Component
 } = React;
 
-const GeoLocationSearch = React.createClass ({
-  getInitialState: function() {
-    return {
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      searchString: '158 City Road Melbourne',
-    }
-  },
+class GeoLocationSearch extends React.Component {
 
-  renderRow: function(rowData) {
+
+  renderRow(rowData) {
     return (
       <Location
         address={rowData.formatted_address}
       />
     )
-  },
+  }
 
-  onSearchTextChanged: function(event) {
-    this.setState({ searchString: event.nativeEvent.text.trim().split(' ').join('+') });
-    console.log(this.state.searchString.trim().split(' ').join('+'));
-  },
+  onSearchTextChanged(event) {
+    console.log(this.props)
+    this.props.setSearchString(event.nativeEvent.text.trim().split(' ').join('+'))
+  }
 
-  _executeQuery: function(query) {
-    // this.setState({ isLoading: true });
-    this.props.updateLocation(this.state.searchString)
-  },
+  _executeQuery() {
+    this.props.updateLocation(this.props.searchString)
+  }
 
-  render: function() {
+  render() {
     var spinner = this.props.isLoading ?
       ( <ActivityIndicatorIOS
           hidden='true'
@@ -55,32 +49,30 @@ const GeoLocationSearch = React.createClass ({
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
-            value={this.state.searchString}
-            onChange={this.onSearchTextChanged}
+            value={this.props.searchString}
+            onChange={this.onSearchTextChanged.bind(this)}
             placeholder='Search via address'
           />
           <TouchableHighlight style={styles.button}
             underlayColor='#99d9f4'>
             <Text
               style={styles.buttonText}
-              onPress={this._executeQuery}>
+              onPress={this._executeQuery.bind(this)}>
               Go
             </Text>
           </TouchableHighlight>
         </View>
         <View>
           <ListView
-            dataSource={this.state.dataSource.cloneWithRows(this.props.location)}
+            dataSource={this.props.location}
             renderRow={this.renderRow}
           />
         </View>
         {spinner}
-        <Text style={styles.description}>{this.state.message}</Text>
-
       </View>
     )
   }
-})
+}
 module.exports = GeoLocationSearch;
 
 
